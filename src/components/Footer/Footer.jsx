@@ -6,7 +6,7 @@ function Footer() {
   const currentYear = new Date().getFullYear();
   return (
     <footer>
-      Copyright© {currentYear} Diptesh Roy All rights reserved.
+      Copyright© {currentYear} Ananya Bandyopadhyay All rights reserved.
     </footer>
   );
 }
