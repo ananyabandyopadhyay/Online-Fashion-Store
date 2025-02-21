@@ -55,12 +55,27 @@ jobs:
 
       - name: Deploy to Development
         if: github.ref == 'refs/heads/development'
-        run: vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --prod --project online-fashion-store
+        run: |
+          echo "Deploying to Development"
+          npm run build
+          npm install -g pm2
+          pm2 stop all || true
+          pm2 start npm -- start
 
       - name: Deploy to Staging
         if: github.ref == 'refs/heads/staging'
-        run: vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --prod --project online-fashion-store
+        run: |
+          echo "Deploying to Staging"
+          npm run build
+          npm install -g pm2
+          pm2 stop all || true
+          pm2 start npm -- start
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/production'
-        run: vercel --token ${{ secrets.VERCEL_TOKEN }} --yes --prod --project online-fashion-store
+        run: |
+          echo "Deploying to Production"
+          npm run build
+          npm install -g pm2
+          pm2 stop all || true
+          pm2 start npm -- start
