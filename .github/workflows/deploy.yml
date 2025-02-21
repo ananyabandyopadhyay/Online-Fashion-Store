@@ -20,7 +20,9 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
   deploy:
     needs: build
@@ -33,6 +35,7 @@ jobs:
         if: github.ref == 'refs/heads/development'
         run: |
           echo "Deploying to Development"
+          npm run build
           npm run devstart
 
       - name: Deploy to Staging
@@ -43,7 +46,7 @@ jobs:
           npm run devstart
 
       - name: Deploy to Production
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/production'
         run: |
           echo "Deploying to Production"
           npm run build
