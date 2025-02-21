@@ -50,6 +50,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Install Vercel CLI
+        run: npm install -g vercel  # ✅ Install Vercel CLI
+
       - name: Deploy to Development
         if: github.ref == 'refs/heads/development'
         run: vercel --token ${{ secrets.VERCEL_TOKEN }} --env DEVELOPMENT=true --prod
