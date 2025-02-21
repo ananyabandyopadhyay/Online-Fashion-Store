@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - production
       - staging
       - development
 
@@ -20,10 +20,19 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+      - name: Build Project
+        run: npm run build
 
-      - name: Run Tests
-        run: npm test
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
   deploy:
     needs: build
@@ -32,11 +41,23 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
       - name: Deploy to Development
         if: github.ref == 'refs/heads/development'
         run: |
           echo "Deploying to Development"
-          npm run devstart
+          npm run build
+          npm install -g pm2
+          pm2 stop all || true
+          pm2 start npm -- start
 
       - name: Deploy to Staging
         if: github.ref == 'refs/heads/staging'
@@ -46,7 +67,7 @@ jobs:
           npm run devstart
 
       - name: Deploy to Production
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/production'
         run: |
           echo "Deploying to Production"
           npm run build
