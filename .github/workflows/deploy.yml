@@ -64,11 +64,15 @@ jobs:
         run: |
           echo "Deploying to Staging"
           npm run build
-          npm run devstart
+          npm install -g pm2
+          pm2 stop all || true
+          pm2 start npm -- start
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/production'
         run: |
           echo "Deploying to Production"
           npm run build
-          npm run devstart
+          npm install -g pm2
+          pm2 stop all || true
+          pm2 start npm -- start
