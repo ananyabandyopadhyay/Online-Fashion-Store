@@ -36,6 +36,7 @@ function Navbar() {
   return (
     <nav>
       <span className="web_sprite_logo brand-logo" onClick={navHome}></span>
+      <>staging</>
       <div className="nav-actions">
         <div className="search-bar">
           <div className="search-btn" onClick={search}>
